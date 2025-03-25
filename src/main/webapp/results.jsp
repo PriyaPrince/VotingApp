@@ -30,6 +30,7 @@
         th, td {
             padding: 10px;
             border-bottom: 1px solid #ddd;
+            text-align: center;
         }
         th {
             background: #007bff;
@@ -60,9 +61,11 @@
                 <td>Stranger Things</td>
                 <td><%= request.getAttribute("strangerThingsVotes") %></td>
             </tr>
+            <tr>
+                <td>Friends</td>
+                <td><%= request.getAttribute("friendsVotes") %></td>
+            </tr>
         </table>
     </div>
 </body>
 </html>
-
-
