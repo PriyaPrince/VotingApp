@@ -44,6 +44,7 @@
             <button type="submit" name="series" value="Breaking Bad">Breaking Bad</button>
             <button type="submit" name="series" value="Game of Thrones">Game of Thrones</button>
             <button type="submit" name="series" value="Stranger Things">Stranger Things</button>
+            <button type="submit" name="series" value="Friends">Friends</button>
         </form>
     </div>
 </body>
