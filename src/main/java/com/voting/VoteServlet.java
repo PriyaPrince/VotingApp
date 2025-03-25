@@ -27,8 +27,12 @@ public class VoteServlet extends HttpServlet {
             voteCount.put(selectedSeries, voteCount.get(selectedSeries) + 1);
         }
 
-        request.setAttribute("voteCount", voteCount);
+        // Pass each vote count separately to results.jsp
+        request.setAttribute("breakingBadVotes", voteCount.get("Breaking Bad"));
+        request.setAttribute("gameOfThronesVotes", voteCount.get("Game of Thrones"));
+        request.setAttribute("strangerThingsVotes", voteCount.get("Stranger Things"));
+        request.setAttribute("friendsVotes", voteCount.get("Friends"));
+
         request.getRequestDispatcher("results.jsp").forward(request, response);
     }
 }
-
