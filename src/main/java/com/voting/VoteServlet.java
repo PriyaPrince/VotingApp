@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/vote")
+@WebServlet("/VoteServlet")
 public class VoteServlet extends HttpServlet {
     private static final Map<String, Integer> voteCount = new HashMap<>();
 
