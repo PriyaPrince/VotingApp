@@ -42,7 +42,7 @@
         <h1>Vote for Your Favorite TV Series.</h1>
         <form action="VoteServlet" method="post">
             <button type="submit" name="series" value="Breaking Bad">Breaking Bad</button>
-            <button type="submit" name="series" value="Game of Throneeeeeeeeeeeeeees">Game of Thrones</button>
+            <button type="submit" name="series" value="Game of Thrones">Game of Thrones</button>
             <button type="submit" name="series" value="Stranger Things">Stranger Things</button>
             <button type="submit" name="series" value="Friends">Friends</button>
         </form>
