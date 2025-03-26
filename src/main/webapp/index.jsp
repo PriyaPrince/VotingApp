@@ -39,7 +39,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Vote for Your Favorite TV Series</h1>
+        <h1>Vote for Your Favorite TV Series..</h1>
         <form action="VoteServlet" method="post">
             <button type="submit" name="series" value="Breaking Bad">Breaking Bad</button>
             <button type="submit" name="series" value="Game of Thrones">Game of Thrones</button>
