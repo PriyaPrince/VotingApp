@@ -1,21 +1,44 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKERHUB_USER = 'priyaprince'
+        DOCKERHUB_PASS = credentials('dockerhub-credentials-id') // from Jenkins Credentials
+        IMAGE_NAME = "${DOCKERHUB_USER}/voting-app"
+    }
+
     stages {
-        stage('Git clone') { 
+        stage('Clone Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/PriyaPrince/VotingApp.git'
+                git 'https://github.com/PriyaPrince/VotingApp.git'
             }
         }
-        stage('Build') { 
+
+        stage('Build WAR') {
             steps {
                 sh 'mvn clean package'
             }
         }
-        stage('Deploy to tomcat') { 
+
+        stage('Build Docker Image') {
             steps {
-                sh 'echo "i am Deploying the war"'
-                sh 'sudo cp "/var/lib/jenkins/workspace/pipeline job01/target/VotingApp-1.0-SNAPSHOT.war" /home/ubuntu/apache-tomcat-10.1.39/webapps/'
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                sh 'docker push $IMAGE_NAME'
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                sh '''
+                    docker rm -f voting-app || true
+                    docker run -d -p 9090:8080 --name voting-app $IMAGE_NAME
+                '''
             }
         }
     }
