@@ -31,5 +31,5 @@ spec:
     - protocol: TCP
       port: 80  # Port exposed inside the cluster
       targetPort: 8080  # The port your container listens on
-      nodePort: 30080  # Port to expose on the node
+      # nodePort: 30080  # Port to expose on the node----commenting the field, sothat k8s automatically assign port
   type: NodePort  # Exposes the service externally via a NodePort
