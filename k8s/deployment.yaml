@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-app-deployment
+  labels:
+    app: voting-app
+spec:
+  replicas: 3  # Number of pods you want to run
+  selector:
+    matchLabels:
+      app: voting-app
+  template:
+    metadata:
+      labels:
+        app: voting-app
+    spec:
+      containers:
+        - name: voting-app
+          image: priyaprince/voting-app:v2.0.0  # Use the image from Docker Hub
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-app-service
+spec:
+  selector:
+    app: voting-app
+  ports:
+    - protocol: TCP
+      port: 80  # Port exposed inside the cluster
+      targetPort: 8080  # The port your container listens on
+      nodePort: 30080  # Port to expose on the node
+  type: NodePort  # Exposes the service externally via a NodePort
