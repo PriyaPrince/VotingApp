@@ -1,1 +1,1 @@
-<h1>This is a voting app in java</h1>
+<h1>CI/CD Pipeline for Java Voting Application</h1>
