@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_USER = "priyaprince"
         IMAGE_VERSION = "v1.${BUILD_NUMBER}"
         IMAGE_NAME = "${DOCKERHUB_USER}/voting-app:${IMAGE_VERSION}"
-        GIT_REPO_NAME = "VotingApp"
+        
              }
 
     stages {
@@ -59,19 +59,27 @@ pipeline {
             steps{
                 script {
                      withCredentials([usernamePassword(credentialsId: 'Git-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
-                    def filePath = 'k8s/deployment.yaml'
+                    def GITOPS_REPO = "Voting-app-gitops"
+                        //def GITOPS_DIR = "gitops-repo"
+                        def FILE_PATH = "${GITOPS_REPO}/manifests/deployment.yaml"
 
+                        // Clone GitOps repo into a custom directory
+                        sh """
+                            rm -rf ${GITOPS_REPO}
+                            git clone https://${GIT_USER}:${GIT_TOKEN}@github.com/${GIT_USER}/${GITOPS_REPO}.git ${GITOPS_REPO}
+                        """
                     // Replace old tag (e.g., v1.3) with new tag (e.g., v6)
                     sh """
-sed -i 's|image: .*/voting-app:.*|image: ${IMAGE_NAME}|' ${filePath}
-"""
+                        sed -i 's|image: .*/voting-app:.*|image: ${IMAGE_NAME}|' ${FILE_PATH}
+                        """
                     // Git commit and push
                     sh """
+                    cd ${GITOPS_REPO}
                     git config user.name "priyaprince"
                     git config user.email "priyaprince87@gmail.com"
-                    git add ${filePath}
+                    git add manifests/deployment.yaml
                     git commit -m "Update image tag to ${IMAGE_VERSION}"
-                    git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GIT_REPO_NAME} HEAD:main
+                    git push https://${GIT_TOKEN}@github.com/${GIT_USER}/${GITOPS_REPO}.git HEAD:main
                     """
                 }
             }
