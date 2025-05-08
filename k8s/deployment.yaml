@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: voting-app
-          image: priyaprince/voting-app:v1.3
+          image: priyaprince/voting-app:v1.4
           ports:
             - containerPort: 8080
 ---
