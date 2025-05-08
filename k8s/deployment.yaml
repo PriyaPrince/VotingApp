@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: voting-app
-          image: priyaprince/voting-app:v2.0.0  # Use the image from Docker Hub
+          image: priyaprince/voting-app:v1.0 # Use the image from Docker Hub
           ports:
             - containerPort: 8080
 ---
