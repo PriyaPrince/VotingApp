@@ -3,10 +3,9 @@ pipeline {
 
     environment {
         DOCKERHUB_USER = "priyaprince"
-        IMAGE_VERSION = "v1.${BUILD_NUMBER}"
-        IMAGE_NAME = "${DOCKERHUB_USER}/voting-app:${IMAGE_VERSION}"
-        
-             }
+        IMAGE_VERSION  = "v1.${BUILD_NUMBER}"
+        IMAGE_NAME     = "${DOCKERHUB_USER}/voting-app:${IMAGE_VERSION}"
+    }
 
     stages {
         stage('Clone Code') {
@@ -21,15 +20,16 @@ pipeline {
             }
         }
 
-       stage('SonarQube Analysis') {
-    steps {
-        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('MySonarQubeServer') {
-                sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+        stage('SonarQube Analysis') {
+            steps {
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('MySonarQubeServer') {
+                        sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+                    }
+                }
             }
         }
-    }
-}
+
         stage('Wait for Quality Gate') {
             steps {
                 timeout(time: 5, unit: 'MINUTES') {
@@ -43,23 +43,26 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
-        stage('Trivy Image Scan')
-        {
-            steps{
-                  sh "trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME"
+
+        stage('Trivy Image Scan') {
+            steps {
+                sh "trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME"
             }
         }
+
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-token', 
-                                                  usernameVariable: 'DOCKERHUB_USER', 
+                withCredentials([usernamePassword(credentialsId: 'docker-token',
+                                                  usernameVariable: 'DOCKERHUB_USER',
                                                   passwordVariable: 'DOCKERHUB_PASS')]) {
                     sh 'echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin'
                     sh 'docker push $IMAGE_NAME'
                 }
             }
         }
-        post {
+    }
+
+    post {
         success {
             emailext(
                 subject: "✅ SUCCESS: Job '${JOB_NAME} [#${BUILD_NUMBER}]'",
@@ -89,7 +92,5 @@ Jenkins
                 to: 'priyaaprnzz@gmail.com'
             )
         }
-    }
-        
     }
 }
