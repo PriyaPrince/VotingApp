@@ -59,6 +59,37 @@ pipeline {
                 }
             }
         }
+        post {
+        success {
+            emailext(
+                subject: "✅ SUCCESS: Job '${JOB_NAME} [#${BUILD_NUMBER}]'",
+                body: """Hi Team,
+
+The Jenkins pipeline job *${JOB_NAME}* completed successfully.
+Build URL: ${BUILD_URL}
+
+Regards,  
+Jenkins
+""",
+                to: 'priyaaprnzz@gmail.com'
+            )
+        }
+
+        failure {
+            emailext(
+                subject: "❌ FAILURE: Job '${JOB_NAME} [#${BUILD_NUMBER}]'",
+                body: """Hi Team,
+
+The Jenkins pipeline job *${JOB_NAME}* has failed.
+Check the logs at: ${BUILD_URL}
+
+Regards,  
+Jenkins
+""",
+                to: 'priyaaprnzz@gmail.com'
+            )
+        }
+    }
         
     }
 }
