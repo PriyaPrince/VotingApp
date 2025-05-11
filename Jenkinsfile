@@ -43,7 +43,12 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME .'
             }
         }
-
+        stage('Trivy Image Scan')
+        {
+            steps{
+                  sh "trivy image --exit-code 1 --severity HIGH,CRITICAL $IMAGE_NAME"
+            }
+        }
         stage('Push Docker Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-token', 
